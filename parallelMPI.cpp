@@ -519,7 +519,7 @@ double scalarProduct(double** first, double** second, double M, double N, double
     return reduced_sum;
 }
 
-double getMaxNorm(double** items, double M, double N, double h1, double h2, Info_t* info, MPI_Comm* Comm) {
+double getMaxNorm(double** items, double M, double N, double h1, double h2, Info_t* info, MPI_Comm Comm) {
     int m = info->m;
     int n = info->n;
     int a1 = info->a1;
@@ -535,7 +535,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
         }
     }
     // printf("local_max: %f\n", local_max);
-    MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
+    MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, Comm); 
     return reduced_max;
 }
 
@@ -707,7 +707,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
         if (rank==0 && count % 100 ==0) {
             minus(omega, solution, difference_omega, M, N, info);
-            double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, Comm);
+            double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, *Comm);
             printf("%f\n", norm);
         }
         count++;

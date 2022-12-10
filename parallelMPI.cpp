@@ -534,8 +534,8 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
             }
         }
     }
-    // printf("local_max: %f\n", local_max);
-    MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
+    printf("local_max: %.15f \n", local_max);
+    // MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, Comm); 
     return reduced_max;
 }
 
@@ -843,11 +843,6 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         minus(omega, tau_r, omega_next, M, N, info);
         difference_local = sqrt(scalarProduct(tau_r, tau_r, M, N, h1, h2, info, Comm));
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
-        // if (rank==0 && count % 100 ==0) {
-        //     minus(omega, omega_next, difference_omega, M, N, info);
-        //     double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, Comm);
-        //     printf("%.15f, %.15f\n", norm, difference_global);
-        // }
         count++;
         // break;
 

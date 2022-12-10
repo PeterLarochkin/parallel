@@ -708,9 +708,9 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     getAnalyticalSolution(solution, h1, h2, info);
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, &Comm);
-    // if (rank == 1)
-    //     printf("norm: %.10f\nrank: %d\niter: %d\ndiff: %.15f\n eps: %.15f\n", norm, rank, count, difference_global, epsilon);
-    printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
+    if (rank == 0)
+        printf("norm: %.10f\nrank: %d\niter: %d\ndiff: %.15f\n eps: %.15f\n", norm, rank, count, difference_global, epsilon);
+    // printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
 }
 
 

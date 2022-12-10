@@ -299,7 +299,8 @@ int main(int argc, char** argv) {
     // for (size_t i = 0; i <= M; ++i)
     //     for (size_t j = 0; j <= N; ++j)
     //         printf("%.10f,%.10f,%.10f,%.10f\n", h1*i, h2*j, u(h1*i, h2*j), omega[i][j]);
-    printf("taken time is %.10f", time_taken);
+    printf("taken time is %.10f\n", time_taken);
     // gcc -o imperative imperative.c && ./imperative
+    // gcc -std=c99  -o imperative imperative.c -lm
     return 0;
 }

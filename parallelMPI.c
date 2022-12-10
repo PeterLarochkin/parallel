@@ -534,7 +534,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
             }
         }
     }
-    printf("local_max: %lf\n", local_max);
+    printf("local_max: %lf\n", local_max * 1000000000);
     MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
     return sqrt(reduced_max);
 }

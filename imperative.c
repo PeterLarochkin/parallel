@@ -286,8 +286,7 @@ int main(int argc, char** argv) {
     double max = 0.0;
     for (size_t i = 0; i <= M; ++i) {
         for (size_t j = 0; j <= N; ++j) { 
-            double item = omega_next[i][j] - u(h1*i, h2*j);
-            item = item * item;
+            double item = fabs(omega_next[i][j] - u(h1*i, h2*j));
             if (item > max) {
                 max = item;
             }

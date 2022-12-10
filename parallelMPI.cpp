@@ -708,7 +708,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         if (rank==0 && count % 100 ==0) {
             minus(omega, solution, difference_omega, M, N, info);
             double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, *Comm);
-            printf("%f, %f\n", norm, difference_global);
+            printf("%.15f, %.15f\n", norm, difference_global);
         }
         count++;
     }
@@ -744,7 +744,7 @@ int main(int argc, char** argv) {
     const size_t N = atoi(argv[2]);
     const size_t time_seq = atof(argv[3]);
     
-    double epsilon = 0.0000001;    
+    double epsilon = 0.0000000000001;    
     double A1 = 0.0;
     double A2 = 4.0;
     double B1 = 0.0;

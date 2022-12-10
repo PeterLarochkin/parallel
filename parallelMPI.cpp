@@ -708,7 +708,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         if (rank==0 && count % 100 ==0) {
             minus(omega, solution, difference_omega, M, N, info);
             double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, *Comm);
-            printf("%f\n", norm);
+            printf("%f, %f\n", norm, difference_global);
         }
         count++;
     }

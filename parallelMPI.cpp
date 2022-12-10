@@ -534,7 +534,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
             }
         }
     }
-    printf("local_max: %f\n", local_max);
+    // printf("local_max: %f\n", local_max);
     MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
     return reduced_max;
 }
@@ -665,7 +665,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
             solution[i][j] = 0.0;
         }
     }
-
+    getAnalyticalSolution(solution, h1, h2, info);
     getB(B, M, N, h1, h2, A1, A2, B1, B2, info);
     double *send_up_row =       (double*) malloc(m * sizeof(double));
     double *recv_up_row =       (double*) malloc(m * sizeof(double));
@@ -705,27 +705,32 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         minus(omega, tau_r, omega_next, M, N, info);
         difference_local = sqrt(scalarProduct(tau_r, tau_r, M, N, h1, h2, info, Comm));
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
+        if (rank==0 && count % 100 ==0) {
+            minus(omega, solution, difference_omega, M, N, info);
+            double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, Comm);
+            printf("%f\n", norm);
+        }
         count++;
     }
 
-    double local_time_diff = MPI_Wtime() - start_time;
+    // double local_time_diff = MPI_Wtime() - start_time;
     
-    double global_time_diff = 0.0;
-    getAnalyticalSolution(solution, h1, h2, info);
-    for (int i=1; i <= 3; ++i) {
-        for (int j=1; j <= 3; ++j) {
-            if (rank==0)
-                printf("%f,%f\n", omega_next[i][j], solution[i][j]);
-        }
-    }
-    minus(solution, omega_next, solution, M, N, info);
-    double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
-    MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);
-    double boost = time_seq/global_time_diff;
-    if (info->rank == 0) {
-        printf("size ,  M , N   , time        , boost      , max_diff\n");
-        printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
-    }
+    // double global_time_diff = 0.0;
+    
+    // for (int i=1; i <= 3; ++i) {
+    //     for (int j=1; j <= 3; ++j) {
+    //         if (rank==0)
+    //             printf("%f,%f\n", omega_next[i][j], solution[i][j]);
+    //     }
+    // }
+    // minus(solution, omega_next, solution, M, N, info);
+    // double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
+    // MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);
+    // double boost = time_seq/global_time_diff;
+    // if (info->rank == 0) {
+    //     printf("size ,  M , N   , time        , boost      , max_diff\n");
+    //     printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
+    // }
     // printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
 }
 

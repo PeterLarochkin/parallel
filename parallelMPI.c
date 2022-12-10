@@ -530,7 +530,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
         for (size_t j = 1; j <= n; ++j) {
             double item = fabs(items[i][j]);
             if (info->rank == 0 && i<3 && j < 3 )
-                printf("item: %f\n", item);
+                printf("item: %f, %f\n", item, 0.001);
             if (item > local_max) {
                 local_max = item;
             }

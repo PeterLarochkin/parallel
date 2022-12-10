@@ -534,7 +534,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
             }
         }
     }
-    // printf("local_max: %f\n", local_max);
+    printf("local_max: %f\n", local_max);
     MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
     return reduced_max;
 }
@@ -753,3 +753,4 @@ int main(int argc, char** argv) {
 
 
 // mpicc parallelMPI.c -o parallel && mpiexec -np 2 ./parallel
+// mpicc parallelMPI.cpp -o parallel.o && mpiexec -np 4 ./parallel.o 20 20 73.51

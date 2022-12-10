@@ -102,7 +102,7 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int rank, int size, 
     // Get process neighbors
     MPI_Cart_shift(*Comm, 1, -1, &up, &down);
     MPI_Cart_shift(*Comm, 0, 1, &left, &right);
-    // printf("----------------- (%d,%d)\n|            (%d)\n|             |\n|       (%d)-(%d, %d,%d)-(%d)  \n|             |\n|           (%d) \n(%d,%d)---------------\n", a2,b2, up, left, rank, coords[0], coords[1], right, down, a1,b1);
+    printf("----------------- (%d,%d)\n|            (%d)\n|             |\n|       (%d)-(%d, %d,%d)-(%d)  \n|             |\n|           (%d) \n(%d,%d)---------------\n", a2,b2, up, left, rank, coords[0], coords[1], right, down, a1,b1);
     info->rank = rank;
     info->coords[0] = coords[0];
     info->coords[1] = coords[1];

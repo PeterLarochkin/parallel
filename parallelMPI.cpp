@@ -528,7 +528,7 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
     double reduced_max = 0.0;
     for (size_t i = 1; i <= m; ++i) {
         for (size_t j = 1; j <= n; ++j) {
-            double item = fabs(items[i][j]);
+            double item = fabs(items[i][j]) *1000;
             if (item > local_max) {
                 local_max = item;
             }

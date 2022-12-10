@@ -11,12 +11,14 @@
 
 struct Info {
   int rank;
+  int size;
   // Process topological coords
   int coords[2];
   int left_rank, right_rank, up_rank, down_rank;
   // Process local domain size
   size_t m, n;
   size_t a1, a2, b1, b2;
+
 };
 typedef struct Info Info_t;
 
@@ -114,6 +116,7 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int* rank, int* size
     info->a2 = a2;
     info->b1 = b1;
     info->b2 = b2;
+    info->size = dims[0] * dims[1];
 }
 
 double q(double x, double y) {
@@ -615,11 +618,13 @@ void getAnalyticalSolution(double** whatWriteTo, double h1, double h2, Info_t* i
     }
 }
 
-void solving (double h1, double h2, double epsilon, double A1, double A2, double B1, double B2, int M, int N, Info_t* info, MPI_Comm *Comm) {
+void solving (double h1, double h2, double epsilon, double A1, double A2, double B1, double B2, int M, int N, Info_t* info, MPI_Comm *Comm, int size, double time_seq) {
     double start_time = MPI_Wtime();
     int m = info->m;
     int n = info->n;
     int rank = info->rank;
+    
+    
 
     double** omega              = (double**)malloc((m + 2) * sizeof(double*)); 
     double** omega_next         = (double**)malloc((m + 2) * sizeof(double*)); 
@@ -701,20 +706,30 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         count++;
     }
 
-    double time_diff = MPI_Wtime() - start_time;
+    double local_time_diff = MPI_Wtime() - start_time;
+    double global_time_diff = 0.0;
     getAnalyticalSolution(solution, h1, h2, info);
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, &Comm);
-    if (rank == 0)
-        printf("norm: %.10f\nrank: %d\niter: %d\ndiff: %.15f\n eps: %.15f\n", norm, rank, count, difference_global, epsilon);
+    MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, Comm);
+    double boost = time_seq/global_time_diff;
+    if (info->rank == 0) {
+        printf("size ,  M , N   , time        , boost      , max_diff\n");
+        printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
+    }
     // printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
 }
 
 
 int main(int argc, char** argv) {
-
-    const size_t M = 40;
-    const size_t N = 40;
+    if (argc < 4) {
+      fprintf(stderr, "Put args!\n");
+      return 1;
+    }
+    const size_t M = atoi(argv[1]);
+    const size_t N = atoi(argv[2]);
+    const size_t time_seq = atof(argv[3]);
+    
     double epsilon = 0.0000001;    
     double A1 = 0.0;
     double A2 = 4.0;
@@ -729,10 +744,10 @@ int main(int argc, char** argv) {
     
     int rank, size;
     partitioningDomain(M, N, &Comm, &rank, &size, &info);
-    solving(h1, h2, epsilon, A1, A2, B1, B2, M, N, &info, Comm);
+    solving(h1, h2, epsilon, A1, A2, B1, B2, M, N, &info, Comm, size, time_seq);
     
     MPI_Finalize();
 }
 
 
-// mpicc parallel.c -o parallel && mpiexec -np 2 ./parallel
+// mpicc parallelMPI.c -o parallel && mpiexec -np 2 ./parallel

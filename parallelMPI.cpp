@@ -186,7 +186,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         }
     }
     // let's look on the top border
-    if (up == -1) {
+    if (up < 0) {
         // if I'm near top, I need to use top boarding equation (10)
         // check (b1 + n) == N ?
         // if ((b1 + n - 1) == N) {
@@ -212,7 +212,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
 
 
     // let's look on the bottom border
-    if (down == -1) {
+    if (down < 0) {
     // if I'm near the bottom border
         for (int i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = -2/(h2*h2) * (whatApplyTo[i][2] - whatApplyTo[i][1]) +
@@ -231,7 +231,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     }
 
     // let's look on the right board
-    if (right == -1) {
+    if (right < 0) {
         // I'm near right border
         // if ((a1 + m - 1) == M) {
         //     printf("Yes\n");
@@ -252,7 +252,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     }
 
     //let's look on the left border
-    if (left == -1) {
+    if (left < 0) {
         // if ((a1 + 1 - 1) == 0) {
         //     printf("Yes\n");
         // }
@@ -272,21 +272,21 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     }
 
     // look on the down-left point
-    if (down==-1 && left==-1) {
+    if (down<0 && left<0) {
         // printf("Yes\n");
         // it's (11) equation
         whatWriteTo[1][1] = -2/(h1*h1)*(whatApplyTo[2][1] - whatApplyTo[1][1]) - 
                          2/(h2*h2)*(whatApplyTo[1][2] - whatApplyTo[1][1]) +
                          (q((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2) + 2/h1 + 2/h2) * whatApplyTo[1][1];
-    } else if (down==-1 && left !=-1 ) {
+    } else if (down<0 && left >=0 ) {
         whatWriteTo[1][1] = -2/(h2*h2) * (whatApplyTo[1][2] - whatApplyTo[1][1]) +
                             ( q((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2) + 2/h2 ) * whatApplyTo[1][1] -
                             1/(h1*h1)*(whatApplyTo[1+1][1] - whatApplyTo[1][1] - whatApplyTo[1][1]+ whatApplyTo[1-1][1]); // <- here is using border from another cell
-    } else if (down!=-1 && left == -1) {
+    } else if (down>=0 && left < 0) {
         whatWriteTo[1][1] = -2/(h1*h1) * (whatApplyTo[2][1] - whatApplyTo[1][1]) + 
                             (q((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2) + 2/h1) * whatApplyTo[1][1] - 
                             1/(h2*h2)*(whatApplyTo[1][1+1] - whatApplyTo[1][1] - whatApplyTo[1][1]+ whatApplyTo[1][1-1]);// <- here is using border from another cell
-    } else if (down!=-1 && left != -1) {
+    } else if (down >0 && left >0) {
         whatWriteTo[1][1] = whatApplyTo[1][1] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2)) + 
                                 whatApplyTo[1-1][1] * (-1/(h1*h1)) + // <- here is using border from another cell
                                 whatApplyTo[1+1][1] * (-1/(h1*h1)) +
@@ -297,22 +297,22 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
 
 
     // look on the bottom-right points
-    if (down==-1 && right==-1) {
+    if (down<0 && right<0) {
         // printf("Yes\n");
         // it's (12) equation
         
         whatWriteTo[m][1] = 2/(h1*h1)*(whatApplyTo[m][1] - whatApplyTo[m-1][1]) - 
                             2/(h2*h2)*(whatApplyTo[m][2] - whatApplyTo[m][1]) +
                             (q((a1 + m - 1)*h1, (b1 + 1 - 1)*h2) + 2/h1 + 2/h2) * whatApplyTo[m][1];
-    } else if (down==-1 && right !=-1 ) {
+    } else if (down<0 && right >= 0 ) {
         whatWriteTo[m][1] = -2/(h2*h2) * (whatApplyTo[m][2] - whatApplyTo[m][1]) +
                             ( q((a1 + m - 1)*h1, (b1 + 1 - 1)*h2) + 2/h2 ) * whatApplyTo[m][1] -
                             1/(h1*h1)*(whatApplyTo[m+1][1] - whatApplyTo[m][1] - whatApplyTo[m][1]+ whatApplyTo[m-1][1]); // <- here is using border from another cell
-    } else if (down!=-1 && right == -1) {
+    } else if (down>=0 && right < 0) {
         whatWriteTo[m][1] = 2/(h1*h1) * (whatApplyTo[m][1] - whatApplyTo[m-1][1]) + 
                             (q((a1 + m - 1)*h1, (b1 + 1 - 1)*h2) + 2/h1) * whatApplyTo[m][1] - 
                             1/(h2*h2)*(whatApplyTo[m][1+1] - whatApplyTo[m][1] - whatApplyTo[m][1]+ whatApplyTo[m][1-1]);
-    } else if (down!=-1 && right != -1) {
+    } else if (down>0 && right>0) {
         whatWriteTo[m][1] = whatApplyTo[m][1] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + m - 1)*h1, (b1 + 1 - 1)*h2)) + 
                                 whatApplyTo[m-1][1] * (-1/(h1*h1)) +
                                 whatApplyTo[m+1][1] * (-1/(h1*h1)) +// <- here is using border from another cell
@@ -321,21 +321,21 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     }
 
     // look on the top-right points
-    if (up==-1 && right==-1) {
+    if (up<0 && right>=0) {
         // printf("Yes\n");
         // it's (13) equation
         whatWriteTo[m][n] = 2/(h1*h1)*(whatApplyTo[m][n] - whatApplyTo[m-1][n]) +
                         2/(h2*h2)*(whatApplyTo[m][n] - whatApplyTo[m][n-1]) +
                         (q((a1 + m - 1)*h1, (b1 + n - 1)*h2) + 2/h1 + 2/h2) * whatApplyTo[m][n];
-    } else if (up==-1 && right !=-1 ) {
+    } else if (up<0 && right >=0 ) {
         whatWriteTo[m][n] = 2/(h2*h2) * (whatApplyTo[m][n] - whatApplyTo[m][n-1]) +
                             ( q((a1 + m - 1)*h1, (b1 + n - 1)*h2) + 2/h2 ) * whatApplyTo[m][n] -
                             1/(h1*h1)*(whatApplyTo[m+1][n] - whatApplyTo[m][n] - whatApplyTo[m][n]+ whatApplyTo[m-1][n]);
-    } else if (up!=-1 && right == -1) {
+    } else if (up>=0 && right < 0) {
         whatWriteTo[m][n] = 2/(h1*h1) * (whatApplyTo[m][n] - whatApplyTo[m-1][n]) + 
                             (q((a1 + m - 1)*h1, (b1 + n - 1)*h2) + 2/h1) * whatApplyTo[m][n] - 
                             1/(h2*h2)*(whatApplyTo[m][n+1] - whatApplyTo[m][n] - whatApplyTo[m][n]+ whatApplyTo[m][n-1]);
-    } else if (up!=-1 && right != -1) {
+    } else if (up>0 && right > 0) {
         whatWriteTo[m][n] = whatApplyTo[m][n] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + m - 1)*h1, (b1 + n - 1)*h2)) + 
                                 whatApplyTo[m-1][n] * (-1/(h1*h1)) +
                                 whatApplyTo[m+1][n] * (-1/(h1*h1)) +
@@ -344,22 +344,22 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     }
 
     // look on the top-left points
-    if (up==-1 && left==-1) {
+    if (up<0 && left<0) {
         // printf("Yes\n");
         // it's (14) equation
         
         whatWriteTo[1][n] = -2/(h1*h1)*(whatApplyTo[2][n]- whatApplyTo[1][n])+
                             2/(h2*h2)*(whatApplyTo[1][n]- whatApplyTo[1][n-1])+
                             (q((a1 + 1 - 1)*h1, (b1 + n - 1)*h2) + 2/h1 + 2/h2) * whatApplyTo[1][n];
-    } else if (up==-1 && left !=-1 ) {
+    } else if (up<0 && left >=0 ) {
         whatWriteTo[1][n] = 2/(h2*h2) * (whatApplyTo[1][n] - whatApplyTo[1][n-1]) +
                             ( q((a1 + 1 - 1)*h1, (b1 + n - 1)*h2) + 2/h2 ) * whatApplyTo[1][n] -
                             1/(h1*h1)*(whatApplyTo[1+1][n] - whatApplyTo[1][n] - whatApplyTo[1][n]+ whatApplyTo[1-1][n]);
-    } else if (up!=-1 && left == -1) {
+    } else if (up>=0 && left <0) {
         whatWriteTo[1][n] = -2/(h1*h1) * (whatApplyTo[2][n] - whatApplyTo[1][n]) + 
                             (q((a1 + 1 - 1)*h1, (b1 + n - 1)*h2) + 2/h1) * whatApplyTo[1][n] - 
                             1/(h2*h2)*(whatApplyTo[1][n+1] - whatApplyTo[1][n] - whatApplyTo[1][n]+ whatApplyTo[1][n-1]);
-    } else if (up!=-1 && left != -1) {
+    } else if (up>0 && left >0) {
         whatWriteTo[1][n] = whatApplyTo[1][n] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + 1 - 1)*h1, (b1 + n - 1)*h2)) + 
                                 whatApplyTo[1-1][n] * (-1/(h1*h1)) +
                                 whatApplyTo[1+1][n] * (-1/(h1*h1)) +
@@ -384,7 +384,7 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
         }
     }
     // let's look on the top border
-    if (up == -1) {
+    if (up <0) {
         // if I'm near top, I need to use top boarding equation (10)
         for (int i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][n] = psi((a1 + i - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + i - 1)*h1, (b1 + n - 1)*h2);
@@ -397,7 +397,7 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     }
 
     // let's look on the bottom border
-    if (down == -1) {
+    if (down <0) {
     // if I'm near the bottom border
         for (int i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = psi((a1 + i - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + i - 1)*h1, (b1 + 1 - 1)*h2);
@@ -410,7 +410,7 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     }
 
     // let's look on the right board
-    if (right == -1) {
+    if (right <0) {
         for (int j = 2; j <= n-1; ++j) { 
             whatWriteTo[m][j] = psi((a1 + m - 1)*h1, (b1 + j - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + m - 1)*h1, (b1 + j - 1)*h2);
         }
@@ -421,7 +421,7 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     }
 
     //let's look on the left border
-    if (left == -1) {
+    if (left <0) {
         for (int j = 2; j <= n-1; ++j) { 
             whatWriteTo[1][j] = psi((a1 + 1 - 1)*h1, (b1 + j - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + 1 - 1)*h1, (b1 + j - 1)*h2);
         }
@@ -432,55 +432,55 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     }
 
     // look on the down-left point
-    if (down==-1 && left==-1) {
+    if (down<0 && left<0) {
         // printf("Yes\n");
         // it's (11) equation
         whatWriteTo[1][1] = psi((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * (2/h1 + 2/h2) + F((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down==-1 && left !=-1 ) {
+    } else if (down<0 && left >= 0 ) {
         whatWriteTo[1][1] = psi((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down!=-1 && left == -1) {
+    } else if (down>=0 && left <0) {
         whatWriteTo[1][1] = psi((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down!=-1 && left != -1) {
+    } else if (down>=0 && left >=0) {
         whatWriteTo[1][1] = F((a1 + 1 - 1)*h1, (b1 + 1 - 1)*h2);
     }
 
 
     // look on the bottom-right points
-    if (down==-1 && right==-1) {
+    if (down<0 && right<0) {
         // printf("Yes\n");
         // it's (12) equation
         whatWriteTo[m][1] = psi((a1 + m - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * (2/h1 + 2/h2) + F((a1 + m - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down==-1 && right !=-1 ) {
+    } else if (down<0 && right >=0 ) {
         whatWriteTo[m][1] = psi((a1 + m - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + m - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down!=-1 && right == -1) {
+    } else if (down>=0 && right <0) {
         whatWriteTo[m][1] = psi((a1 + m - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + m - 1)*h1, (b1 + 1 - 1)*h2);
-    } else if (down!=-1 && right != -1) {
+    } else if (down>=0 && right >=0) {
         whatWriteTo[m][1] = F((a1 + m - 1)*h1, (b1 + 1 - 1)*h2);
     }
 
     // look on the top-right points
-    if (up==-1 && right==-1) {
+    if (up<0 && right<0) {
         // printf("Yes\n");
         // it's (13) equation
         whatWriteTo[m][n] = psi((a1 + m - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * (2/h1 + 2/h2) + F((a1 + m - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up==-1 && right !=-1 ) {
+    } else if (up<0 && right >=0 ) {
         whatWriteTo[m][n] = psi((a1 + m - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + m - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up!=-1 && right == -1) {
+    } else if (up>=0 && right <0) {
         whatWriteTo[m][n] = psi((a1 + m - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + m - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up!=-1 && right != -1) {
+    } else if (up>=0 && right >=0) {
         whatWriteTo[m][n] = F((a1 + m - 1)*h1, (b1 + n - 1)*h2);
     }
 
     // look on the top-left points
-    if (up==-1 && left==-1) {
+    if (up<0 && left<0) {
         // printf("Yes\n");
         // it's (14) equation
         whatWriteTo[1][n] = psi((a1 + 1 - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * (2/h1 + 2/h2) + F((a1 + 1 - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up==-1 && left !=-1 ) {
+    } else if (up<0 && left >=0 ) {
         whatWriteTo[1][n] = psi((a1 + 1 - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + 1 - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up!=-1 && left == -1) {
+    } else if (up>=0 && left <0) {
         whatWriteTo[1][n] = psi((a1 + 1 - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + 1 - 1)*h1, (b1 + n - 1)*h2);
-    } else if (up!=-1 && left != -1) {
+    } else if (up>=0 && left >=0) {
         whatWriteTo[1][n] = F((a1 + 1 - 1)*h1, (b1 + n - 1)*h2);
     }
 }

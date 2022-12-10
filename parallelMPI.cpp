@@ -706,7 +706,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         difference_local = sqrt(scalarProduct(tau_r, tau_r, M, N, h1, h2, info, Comm));
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
         if (rank==0 && count % 100 ==0) {
-            minus(omega, solution, difference_omega, M, N, info);
+            minus(omega, omega_next, difference_omega, M, N, info);
             double norm = getMaxNorm(difference_omega, M, N, h1, h2, info, Comm);
             printf("%.15f, %.15f\n", norm, difference_global);
         }

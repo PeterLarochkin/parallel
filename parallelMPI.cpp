@@ -709,8 +709,15 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     }
 
     double local_time_diff = MPI_Wtime() - start_time;
+    
     double global_time_diff = 0.0;
     getAnalyticalSolution(solution, h1, h2, info);
+    for (int i=1; i <= 3; ++i) {
+        for (int j=1; j <= 3; ++j) {
+            if (rank==0)
+                printf("%f,%f", omega_next[i][j], solution[i][j]);
+        }
+    }
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
     MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);

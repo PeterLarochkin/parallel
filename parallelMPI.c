@@ -662,6 +662,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
             A_r[i][j] = 0.0;
             tau_r[i][j] = 0.0;
             difference_omega[i][j] = 0.0;
+            solution[i][j] = 0.0;
         }
     }
 

@@ -717,7 +717,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     double boost = time_seq/global_time_diff;
     if (info->rank == 0) {
         printf("size ,  M , N   , time        , boost      , max_diff\n");
-        printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
+        printf("%d   &  %d \\times %d & %f & %f & %f\n", info->size, M, N, global_time_diff, boost ,  norm);
     }
     // printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
 }

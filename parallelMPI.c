@@ -524,17 +524,17 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
     int n = info->n;
     int a1 = info->a1;
     int b1 = info->b1;
-    double local_max = 0.0;
+    int local_max = 0.0;
     double reduced_max = 0.0;
     for (size_t i = 1; i <= m; ++i) {
         for (size_t j = 1; j <= n; ++j) {
-            double item = items[i][j]*items[i][j];
+            int item = items[i][j]*items[i][j]*1000000000;
             if (item > local_max) {
                 local_max = item;
             }
         }
     }
-    printf("local_max: %lf\n", local_max * 1000000000);
+    printf("local_max: %f\n", local_max / 1000000000);
     MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
     return sqrt(reduced_max);
 }

@@ -120,9 +120,6 @@ double q(double x, double y) {
     return x + y;
 }
 
-double u(double x, double y) {
-    return sqrt(4+x*y);
-}
 
 double F(double x, double y) {
     double u_ = u(x, y);

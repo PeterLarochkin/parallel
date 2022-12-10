@@ -737,8 +737,8 @@ int main(int argc, char** argv) {
     double A2 = 4.0;
     double B1 = 0.0;
     double B2 = 3.0;
-    double h1 = (A2 - A1)/M;
-    double h2 = (B2 - B1)/N;
+    double h1 = (A2 - A1)/(double)M;
+    double h2 = (B2 - B1)/(double)N;
     Info_t info;
     MPI_Comm Comm;
     MPI_Init(&argc, &argv);

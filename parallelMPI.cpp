@@ -715,7 +715,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     for (int i=1; i <= 3; ++i) {
         for (int j=1; j <= 3; ++j) {
             if (rank==0)
-                printf("%f,%f", omega_next[i][j], solution[i][j]);
+                printf("%f,%f\n", omega_next[i][j], solution[i][j]);
         }
     }
     minus(solution, omega_next, solution, M, N, info);

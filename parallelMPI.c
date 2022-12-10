@@ -519,13 +519,13 @@ double scalarProduct(double** first, double** second, double M, double N, double
     return reduced_sum;
 }
 
-int getMaxNorm_x_billion(double** items, double M, double N, double h1, double h2, Info_t* info, MPI_Comm* Comm) {
+double getMaxNorm(double** items, double M, double N, double h1, double h2, Info_t* info, MPI_Comm* Comm) {
     int m = info->m;
     int n = info->n;
     int a1 = info->a1;
     int b1 = info->b1;
     double local_max = 0.0;
-    int reduced_max = 0;
+    double reduced_max = 0.0;
     for (size_t i = 1; i <= m; ++i) {
         for (size_t j = 1; j <= n; ++j) {
             double item = items[i][j]*items[i][j];
@@ -534,10 +534,9 @@ int getMaxNorm_x_billion(double** items, double M, double N, double h1, double h
             }
         }
     }
-    int inInt = local_max * 1000000000;
-    // printf("local_max: %f\n", local_max/1000000);
-    MPI_Allreduce(&local_max, &reduced_max, 1, MPI_INT, MPI_MAX, *Comm); 
-    return reduced_max;
+    printf("local_max: %f\n", local_max);
+    MPI_Allreduce(&local_max, &reduced_max, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
+    return sqrt(reduced_max);
 }
 
 void multiplyByNum(double** items, double num, double** whatWriteTo, double M, double N, Info_t* info) {
@@ -712,13 +711,12 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     double global_time_diff = 0.0;
     getAnalyticalSolution(solution, h1, h2, info);
     minus(solution, omega_next, solution, M, N, info);
-    int norm = getMaxNorm_x_billion(solution, M, N, h1, h2, info, &Comm);
-    // because some troubles with double in Polus
+    double norm = getMaxNorm(solution, M, N, h1, h2, info, &Comm);
     MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, Comm);
     double boost = time_seq/global_time_diff;
     if (info->rank == 0) {
         printf("size ,  M , N   , time        , boost      , max_diff\n");
-        printf("%d   &  %d \\times %d & %f & %f & %f\n", info->size, M, N, global_time_diff, boost ,  sqrt(norm/1000000000));
+        printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
     }
     // printf("rank: %d, norm: %.10f, time: %.10f\n", rank, norm, time_diff);
 }

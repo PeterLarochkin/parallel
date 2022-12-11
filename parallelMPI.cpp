@@ -38,16 +38,16 @@ int log2_(int num) {
 int split(size_t M, size_t N, int power) {
   double m = (double)M;
   double n = (double)N;
-  int px = 0;
+  int py = 0;
   for (int i = 0; i < power; ++i) {
     if (m > n) {
-      m /= 2.0;
-      ++px;
-    } else {
       n /= 2.0;
+      ++py;
+    } else {
+      m /= 2.0;
     }
   } 
-  return px;
+  return py;
 }
 
 double u(double x, double y) {
@@ -75,7 +75,7 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int rank, int size, 
     } 
     
     py = split(M, N, power);
-    px = power - px;
+    px = power - py;
     
     dims[0] = pow(2, px); 
     dims[1] = pow(2, py);

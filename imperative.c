@@ -221,7 +221,7 @@ int main(int argc, char** argv) {
     t = clock();
     
     
-    double epsilon = 0.000006;
+    double epsilon = 0.000004;
     // const size_t M = 160;
     // const size_t N = 160;
     

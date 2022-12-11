@@ -778,7 +778,7 @@ int main(int argc, char** argv) {
     const size_t N = atoi(argv[2]);
     const size_t time_seq = atof(argv[3]);
     
-    double epsilon = 0.000006;    
+    double epsilon = 0.000004;    
     double A1 = 0.0;
     double A2 = 4.0;
     double B1 = 0.0;

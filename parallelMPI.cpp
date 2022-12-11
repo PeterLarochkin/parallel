@@ -160,7 +160,9 @@ double psi(double x, double y, double A1, double A2, double B1, double B2, doubl
         double u = sqrt(4.0+x*y);
         return (h1*(x/(2*u)+u) + h2*(y/(2*u)+u)) / (h1 + h2);
     } else {
-        printf("ERROR:(%.10f, %.10f)", x, y);
+        // printf("ERROR:(%.10f, %.10f)", x, y);
+        double u_ = sqrt(4.0+x*y);
+        return y/(2*u_)+u_;
     }  
 }
 

@@ -574,132 +574,7 @@ void sendrecv(double **domain,
       send_right_column[j] = domain[m][j + 1];
     }
     MPI_Status Status;
-    // MPI_Request req1 = MPI_Request(1);
-    // MPI_Request req2 = MPI_Request(2);
-    // MPI_Request req3 = MPI_Request(3);
-    // MPI_Request req4;
-    
-    // if (up != -1) {
-    //     MPI_Send(send_up_row, m, MPI_DOUBLE, up, 0, *Comm);
-    // }
-    // if (down != -1) {
-    //     MPI_Send(send_down_row, m, MPI_DOUBLE, down, 0, *Comm);
-    // }
-    // if (left != -1) {
-    //     MPI_Send(send_left_column, n, MPI_DOUBLE, left, 0, *Comm);
-    // }
-    // if (right != -1) { 
-    //     MPI_Send(send_right_column, n, MPI_DOUBLE, right, 0, *Comm);
-    // }
-    // if (up != -1) {
-    //     MPI_Recv(recv_up_row, m, MPI_DOUBLE, up, 0, *Comm, &Status);
-    // }
-    // if (down != -1) {
-    //     MPI_Recv(recv_down_row, m, MPI_DOUBLE, down, 0, *Comm, &Status);
-    // }
-    // if (left != -1) {
-    //     MPI_Recv(recv_left_column, n, MPI_DOUBLE, left, 0, *Comm, &Status);
-    // }
-    // if (right != -1) { 
-    //     MPI_Recv(recv_right_column, n, MPI_DOUBLE, right, 0, *Comm, &Status);
-    // }
-    
-    
-    
-    //  if (up != -1) {
-    //     MPI_Sendrecv(send_up_row, info->m, MPI_DOUBLE, up, 0, recv_up_row, info->m, MPI_DOUBLE, up, 0, *Comm, &Status);
-    //     printf("send\n");
-    // }
-    // if (down != -1) {
-    //     MPI_Sendrecv(send_down_row, info->m, MPI_DOUBLE, down, 0, recv_down_row, info->m, MPI_DOUBLE, down, 0, *Comm, &Status);
-    //     printf("send\n");
-    // }
-    // if (left != -1) {
-    //     MPI_Sendrecv(send_left_column, info->n, MPI_DOUBLE, left, 0, recv_left_column, info->n, MPI_DOUBLE, left, 0, *Comm, &Status);
-    //     printf("send\n");
-    // }
-    // if (right != -1) { 
-    //     MPI_Sendrecv(send_right_column, info->n, MPI_DOUBLE, right, 0, recv_right_column, info->n, MPI_DOUBLE, right, 0, *Comm, &Status);
-    //     printf("send\n");
-    // }
 
-    // можно попробовать Isend, Irecv, если нужно что-то ускорить
-    // if (down != -1) {
-    //     // MPI_Recv(recv_down_row, m, MPI_DOUBLE, down, 0, *Comm, &Status);
-    //     MPI_Irecv(recv_down_row,m, MPI_DOUBLE, down, 0, *Comm, &req1);
-    //     MPI_Isend(send_up_row, m, MPI_DOUBLE, up, 0, *Comm, &req1);
-    //     // MPI_Wait(&req1, &Status);
-    //     printf("recv from %d to %d \n", rank, down);
-    // }
-    // if (up != -1) {
-    //     // MPI_Isendrecv(send_up_row, m, MPI_DOUBLE, up, 0, recv_up_row, m, MPI_DOUBLE, up, 0, Comm, &req1);
-    //     MPI_Isend(send_up_row, m, MPI_DOUBLE, up, 0, *Comm, &req2);
-    //     MPI_Irecv(recv_down_row,m, MPI_DOUBLE, down, 0, *Comm, &req2);
-    //     // MPI_Send(send_up_row, m, MPI_DOUBLE, up, 0, *Comm);
-    //     // MPI_Wait(&req1, &Status);
-    //     printf("send from %d to %d \n", up, rank);
-    // }
-    // if (down != -1)
-    // MPI_Wait(&req1, &Status);
-    // if (up != -1)
-    // MPI_Wait(&req2, &Status);
-    // if (up != -1) {
-    //     MPI_Recv(recv_up_row, m, MPI_DOUBLE, up, 0, *Comm, &Status);
-    //     // MPI_Irecv(recv_up_row,m, MPI_DOUBLE, up, 0, *Comm, &req2);
-    //     // MPI_Wait(&req1, &Status);
-    //     // printf("recv from %d to %d \n", rank, up);
-    // }
-    // if (down != -1) {
-    //     // MPI_Isendrecv(send_down_row, m, MPI_DOUBLE, down, 0, recv_down_row, m, MPI_DOUBLE, down, 0, Comm, &req2);
-    //     // MPI_Isend(send_down_row, m, MPI_DOUBLE, down, 0, *Comm, &req2);
-        
-    //     MPI_Send(send_down_row, m, MPI_DOUBLE, down, 0, *Comm);
-    //     // MPI_Wait(&req1, &Status);
-    //     // printf("send from %d to %d \n", rank, down);
-    // }
-    
-
-    // if (left != -1) {
-    //     // MPI_Isendrecv(send_left_column, n, MPI_DOUBLE, left, 0, recv_left_column, n, MPI_DOUBLE, left, 0, Comm, &req3);
-    //     MPI_Isend(send_left_column, n, MPI_DOUBLE, left, 0, *Comm, &req3);
-    //     // MPI_Wait(&req1, &Status);
-    //     // MPI_Send(send_left_column, n, MPI_DOUBLE, left, 0, *Comm);
-    //     // printf("send from %d to %d \n", rank, left);
-    // }
-    // if (right != -1) { 
-    //     // MPI_Recv(recv_right_column, n, MPI_DOUBLE, right, 0, *Comm, &Status);
-    //     MPI_Irecv(recv_left_column,n, MPI_DOUBLE, right, 0, *Comm, &req3);
-    //     // MPI_Wait(&req1, &Status);
-    //     // printf("recv from %d to %d \n", rank, right);
-    // }
-
-    // if (right != -1) { 
-    //     // MPI_Isendrecv(send_right_column, n, MPI_DOUBLE, left, 0, recv_right_column, n, MPI_DOUBLE, left, 0, *Comm, &req3);
-    //     MPI_Isend(send_left_column, n, MPI_DOUBLE, right, 0, *Comm, &req4);
-    //     // MPI_Wait(&req1, &Status);
-    //     // MPI_Send(send_right_column, n, MPI_DOUBLE, right, 0, *Comm);
-    //     // printf("send from %d to %d \n", rank, right);
-    // }
-    // if (left != -1) {
-    //     // MPI_Recv(recv_left_column, n, MPI_DOUBLE, left, 0, *Comm, &Status);
-    //     MPI_Irecv(recv_left_column,n, MPI_DOUBLE, left, 0, *Comm, &req4);
-        
-    //     // printf("recv from %d to %d \n", rank, left);
-    // }
-    // // MPI_Wait(&req1, &Status);
-    
-    // if (up != -1) {
-        
-    // }
-    // if (down != -1) {
-    //     MPI_Wait(&req2, &Status);
-    // }
-    // if (left != -1) {
-    //     MPI_Wait(&req3, &Status);
-    // }
-    // if (right != -1) { 
-    //     MPI_Wait(&req4, &Status);
-    // }
     
     
 
@@ -765,7 +640,6 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int n = info->n;
     int rank = info->rank;
     
-    
 
     double** omega              = (double**)malloc((m + 2) * sizeof(double*)); 
     double** omega_next         = (double**)malloc((m + 2) * sizeof(double*)); 
@@ -805,6 +679,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
             solution[i][j] = 0.0;
         }
     }
+    
     getAnalyticalSolution(solution, h1, h2, info);
     getB(B, M, N, h1, h2, A1, A2, B1, B2, info);
     double *send_up_row =       (double*) malloc(m * sizeof(double));
@@ -819,6 +694,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int count = 0;
     while (difference_global >= epsilon)
     {
+        
         for (size_t i = 1; i <= m; ++i) {
             for (size_t j = 1; j <= n; ++j) {
                 omega[i][j] = omega_next[i][j];
@@ -846,24 +722,18 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         difference_local = sqrt(scalarProduct(tau_r, tau_r, M, N, h1, h2, info, Comm));
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
         count++;
-        // break;
 
     }
 
     double local_time_diff = MPI_Wtime() - start_time;
     
     double global_time_diff = 0.0;
-    
-    // for (int i=1; i <= 3; ++i) {
-    //     for (int j=1; j <= 3; ++j) {
-    //         if (rank==0)
-    //             printf("%f,%f\n", omega_next[i][j], solution[i][j]);
-    //     }
-    // }
+
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
     MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);
     double boost = time_seq/global_time_diff;
+    // return;
     if (info->rank == 0) {
         printf("size ,  M , N   , time        , boost      , max_diff\n");
         printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
@@ -895,6 +765,7 @@ int main(int argc, char** argv) {
     
     int rank, size;
     partitioningDomain(M, N, &Comm, rank, size, &info);
+    
     solving(h1, h2, epsilon, A1, A2, B1, B2, M, N, &info, &Comm, size, time_seq);
     
     MPI_Finalize();

@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <mpi.h>
-#include </usr/local/Cellar/libomp/15.0.6/include/omp.h>
+// #include </usr/local/Cellar/libomp/15.0.6/include/omp.h>
+#include <omp.h>
 #include <string.h>
 
 

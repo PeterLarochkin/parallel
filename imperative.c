@@ -221,7 +221,7 @@ int main(int argc, char** argv) {
     t = clock();
     
     
-    double epsilon = 0.000003;
+    double epsilon = 0.000004;
     // const size_t M = 160;
     // const size_t N = 160;
     
@@ -301,5 +301,6 @@ int main(int argc, char** argv) {
     printf("time:%.10f, diff:%.10f\n", time_taken, max);
     // gcc -o imperative imperative.c && ./imperative
     // gcc -std=c99  -o imperative imperative.c -lm
+    // mpicc -O2 -o imperative.o imperative.c && ./imperative.o 200 200
     return 0;
 }

@@ -73,25 +73,25 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int rank, int size, 
         printf("error");
     MPI_Finalize();
     } 
-    // Find such px, py that ProcNum = 2^(px+py)
-    px = split(M, N, power);
-    py = power - px;
-    // Find dims[0] = 2^px and dims[1] = 2^py
+    
+    py = split(M, N, power);
+    px = power - px;
+    
     dims[0] = pow(2, px); 
     dims[1] = pow(2, py);
-    // Find local domain size: m = M/(2^px), n = N/(2^py) 
+    
     int m = M / dims[0]; 
     int n = N / dims[1];
     int rx = M + 1 - dims[0] * m;
     int ry = N + 1 - dims[1] * n;
-    // Create the cartesian 2D topology
+    
     int coords[2];
 
     // printf("dims:[%d, %d]", dims[0], dims[1]);
     MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, 1, Comm);
     
     MPI_Cart_coords(*Comm, rank, ndims, coords);
-    // Get process start and end points, local domain size
+    
     int a1 = MIN(rx, coords[0]) * (m + 1) + MAX(0, (coords[0] - rx)) * m;
     int b1 = MIN(ry, coords[1]) * (n + 1) + MAX(0, (coords[1] - ry)) * n;
     int a2 = a1 + m + (coords[0] < rx ? 1 : 0);

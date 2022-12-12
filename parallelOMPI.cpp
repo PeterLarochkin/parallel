@@ -692,7 +692,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     for (size_t i = 0; i <= m + 1; ++i) {
         for (size_t j = 0; j <= n + 1; ++j) {
             omega[i][j] = 0.0;
-            omega_next[i][j] = 0.0;
+            omega_next[i][j] = 2.0;
             B[i][j] = 0.0;
             A_omega[i][j] = 0.0;
             r[i][j] = 0.0;

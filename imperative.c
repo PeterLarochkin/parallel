@@ -248,7 +248,7 @@ int main(int argc, char** argv) {
     for (size_t i = 0; i <= M; ++i) {
         for (size_t j = 0; j <= N; ++j) {
             omega[i][j] = 0.0;
-            omega_next[i][j] = 0.0;
+            omega_next[i][j] = 2.0;
             B[i][j] = 0.0;
             A_omega[i][j] = 0.0;
             r[i][j] = 0.0;

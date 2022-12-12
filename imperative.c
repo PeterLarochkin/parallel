@@ -210,18 +210,18 @@ void multiplyByNum(double** items, double num, double** whatWriteTo, double M, d
 
 
 int main(int argc, char** argv) {
-    if (argc < 3) {
+    if (argc < 4) {
       fprintf(stderr, "Put args!\n");
       return 1;
     }
     const size_t M = atoi(argv[1]);
     const size_t N = atoi(argv[2]);
+    double epsilon = atof(argv[3]);
 
     clock_t t;
     t = clock();
     
     
-    double epsilon = 0.000005;
     // const size_t M = 160;
     // const size_t N = 160;
     

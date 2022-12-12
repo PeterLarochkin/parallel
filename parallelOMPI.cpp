@@ -39,16 +39,16 @@ int log2_(int num) {
 int split(size_t M, size_t N, int power) {
   double m = (double)M;
   double n = (double)N;
-  int px = 0;
+  int py = 0;
   for (int i = 0; i < power; ++i) {
     if (m > n) {
-      m /= 2.0;
-      ++px;
-    } else {
       n /= 2.0;
+      ++py;
+    } else {
+      m /= 2.0;
     }
   } 
-  return px;
+  return py;
 }
 
 double u(double x, double y) {
@@ -74,18 +74,18 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int rank, int size, 
         printf("error");
     MPI_Finalize();
     } 
-    // Find such px, py that ProcNum = 2^(px+py)
-    px = split(M, N, power);
-    py = power - px;
-    // Find dims[0] = 2^px and dims[1] = 2^py
+    
+    py = split(M, N, power);
+    px = power - py;
+    
     dims[0] = pow(2, px); 
     dims[1] = pow(2, py);
-    // Find local domain size: m = M/(2^px), n = N/(2^py) 
+    
     int m = M / dims[0]; 
     int n = N / dims[1];
     int rx = M + 1 - dims[0] * m;
     int ry = N + 1 - dims[1] * n;
-    // Create the cartesian 2D topology
+    
     int coords[2];
 
     // printf("dims:[%d, %d]", dims[0], dims[1]);
@@ -770,15 +770,15 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
 
 
 int main(int argc, char** argv) {
-    if (argc < 4) {
+    if (argc < 5) {
       fprintf(stderr, "Put args!\n");
       return 1;
     }
     const size_t M = atoi(argv[1]);
     const size_t N = atoi(argv[2]);
     const size_t time_seq = atof(argv[3]);
+    double epsilon = atof(argv[4]);    
     
-    double epsilon = 0.000005;    
     double A1 = 0.0;
     double A2 = 4.0;
     double B1 = 0.0;

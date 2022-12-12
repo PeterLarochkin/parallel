@@ -743,15 +743,15 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
 
 
 int main(int argc, char** argv) {
-    if (argc < 4) {
+    if (argc < 5) {
       fprintf(stderr, "Put args!\n");
       return 1;
     }
     const size_t M = atoi(argv[1]);
     const size_t N = atoi(argv[2]);
     const size_t time_seq = atof(argv[3]);
+    double epsilon = atof(argv[4]);    
     
-    double epsilon = 0.000005;    
     double A1 = 0.0;
     double A2 = 4.0;
     double B1 = 0.0;

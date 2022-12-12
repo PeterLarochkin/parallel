@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <mpi.h>
+// #include </usr/local/Cellar/libomp/15.0.6/include/omp.h>
+#include <omp.h>
 #include <string.h>
 
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
-
 
 struct Info {
   int rank;
@@ -91,7 +92,7 @@ void partitioningDomain(size_t M, size_t N, MPI_Comm *Comm, int rank, int size, 
     MPI_Cart_create(MPI_COMM_WORLD, ndims, dims, periods, 1, Comm);
     
     MPI_Cart_coords(*Comm, rank, ndims, coords);
-    
+    // Get process start and end points, local domain size
     int a1 = MIN(rx, coords[0]) * (m + 1) + MAX(0, (coords[0] - rx)) * m;
     int b1 = MIN(ry, coords[1]) * (n + 1) + MAX(0, (coords[1] - ry)) * n;
     int a2 = a1 + m + (coords[0] < rx ? 1 : 0);
@@ -219,7 +220,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     // let's look on the bottom border
     if (down <0) {
     // if I'm near the bottom border
-        #pragma omp parallel for default(shared) private(i) schedule(dynamic)
+    #pragma omp parallel for default(shared) private(i) schedule(dynamic)
         for (int i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = -2/(h2*h2) * (whatApplyTo[i][2] - whatApplyTo[i][1]) +
                             ( q((a1 + i - 1)*h1, (b1 + 1 - 1)*h2) + 2/h2 ) * whatApplyTo[i][1] -
@@ -548,7 +549,6 @@ double getMaxNorm(double** items, double M, double N, double h1, double h2, Info
     int b1 = info->b1;
     double local_max = 0.0;
     double reduced_max = 0.0;
-    
     for (size_t i = 1; i <= m; ++i) {
         for (size_t j = 1; j <= n; ++j) {
             double item = fabs(items[i][j]);
@@ -592,15 +592,12 @@ void sendrecv(double **domain,
       send_down_row[i] = domain[i + 1][1];
       send_up_row[i] = domain[i + 1][n]; 
     }
-    #pragma omp parallel for default(shared) private(i) schedule(dynamic)
+    #pragma omp parallel for default(shared) private(j) schedule(dynamic)
     for (size_t j = 0; j < n; ++j) {  
       send_left_column[j] = domain[1][j + 1]; 
       send_right_column[j] = domain[m][j + 1];
     }
     MPI_Status Status;
-
-    
-    
 
 	if ((up < 0) && (down >= 0)) {
         
@@ -652,7 +649,6 @@ void getAnalyticalSolution(double** whatWriteTo, double h1, double h2, Info_t* i
     int n = info->n;
     int a1 = info->a1;
     int b1 = info->b1;
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for (int i=1; i <= m; ++i) {
         for (int j=1; j <= n; ++j) {
             whatWriteTo[i][j] = u((a1 + i - 1)*h1, (b1 + j - 1)*h2);
@@ -665,6 +661,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int m = info->m;
     int n = info->n;
     int rank = info->rank;
+    
     
 
     double** omega              = (double**)malloc((m + 2) * sizeof(double*)); 
@@ -705,7 +702,6 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
             solution[i][j] = 0.0;
         }
     }
-    
     getAnalyticalSolution(solution, h1, h2, info);
     getB(B, M, N, h1, h2, A1, A2, B1, B2, info);
     double *send_up_row =       (double*) malloc(m * sizeof(double));
@@ -720,7 +716,6 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int count = 0;
     while (difference_global >= epsilon)
     {
-        
         for (size_t i = 1; i <= m; ++i) {
             for (size_t j = 1; j <= n; ++j) {
                 omega[i][j] = omega_next[i][j];
@@ -748,18 +743,24 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         difference_local = sqrt(scalarProduct(tau_r, tau_r, M, N, h1, h2, info, Comm));
         MPI_Allreduce(&difference_local, &difference_global, 1, MPI_DOUBLE, MPI_MAX, *Comm); 
         count++;
+        // break;
 
     }
 
     double local_time_diff = MPI_Wtime() - start_time;
     
     double global_time_diff = 0.0;
-
+    
+    // for (int i=1; i <= 3; ++i) {
+    //     for (int j=1; j <= 3; ++j) {
+    //         if (rank==0)
+    //             printf("%f,%f\n", omega_next[i][j], solution[i][j]);
+    //     }
+    // }
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
     MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);
     double boost = time_seq/global_time_diff;
-    // return;
     if (info->rank == 0) {
         printf("size ,  M , N   , time        , boost      , max_diff\n");
         printf("%d   &  %d \\times %d & %.10f & %.10f & %.10f\n", info->size, M, N, global_time_diff, boost ,  norm);
@@ -791,12 +792,10 @@ int main(int argc, char** argv) {
     
     int rank, size;
     partitioningDomain(M, N, &Comm, rank, size, &info);
-    
     solving(h1, h2, epsilon, A1, A2, B1, B2, M, N, &info, &Comm, size, time_seq);
     
     MPI_Finalize();
 }
 
-
-// mpicc parallelMPI.c -o parallel && mpiexec -np 2 ./parallel
-// mpicc parallelMPI.cpp -o parallel.o && mpiexec -np 4 ./parallel.o 20 20 73.51
+// export OMP_NUM_THREADS=4
+// mpicc -openmp parallelOMPI.cpp -o parallelO.o && mpiexec -n 4 ./parallelO.o 80 80 73.51

@@ -1,0 +1,5 @@
+#BSUB -n 8
+#BSUB -W 00:30
+#BSUB -o "po8_500x1000.out"
+#BSUB -e "err.err"
+OMP_NUM_THREADS=4 mpiexec ./parallelO.o 500 1000 1323.47

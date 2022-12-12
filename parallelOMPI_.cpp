@@ -179,7 +179,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     int down = info->down_rank;
     //with padding, inside, inside "picture"
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for ( i= 2; i <= m-1; ++i) {
         for (j = 2; j <= n-1; ++j) {
             // here is (7) equation works
@@ -392,7 +392,7 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     int down = info->down_rank;
     int i, j;
     //with padding, inside, inside "picture"
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for (i = 2; i <= m-1; ++i) {
         for (int j = 2; j <= n-1; ++j) {
             whatWriteTo[i][j] = F((a1 + i - 1)*h1, (b1 + j - 1)*h2);
@@ -512,7 +512,7 @@ void minus(double** first, double** second, double** whatWriteTo, double M, doub
     int m = info->m;
     int n = info->n;
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for (i = 1; i <= m; ++i) {
             for (j = 1; j <= n; ++j) {
             whatWriteTo[i][j] = first[i][j] - second[i][j];
@@ -536,7 +536,7 @@ double scalarProduct(double** first, double** second, double M, double N, double
     double local_sum = 0.0;
     double reduced_sum = 0.0;
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic) reduction(+:local_sum)
+    // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic) reduction(+:local_sum)
     for (i = 1; i <= m; ++i) {
         for (j = 1; j <= n; ++j) {
             local_sum = local_sum + h1*h2*ro((a1 + i - 1), M)*ro((b1 + j - 1), N) * first[i][j] * second[i][j];
@@ -571,7 +571,7 @@ void multiplyByNum(double** items, double num, double** whatWriteTo, double M, d
     int m = info->m;
     int n = info->n;
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for (i = 1; i <= m; ++i) {
             for (j = 1; j <= n; ++j) {
             whatWriteTo[i][j] = items[i][j]*num;
@@ -594,12 +594,12 @@ void sendrecv(double **domain,
     int n = info->n;
     int rank = info->rank;
     int i, j;
-    #pragma omp parallel for default(shared) private(i) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i) schedule(dynamic)
     for (i = 0; i < info->m; ++i) {
       send_down_row[i] = domain[i + 1][1];
       send_up_row[i] = domain[i + 1][n]; 
     }
-    #pragma omp parallel for default(shared) private(j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(j) schedule(dynamic)
     for (j = 0; j < n; ++j) {  
       send_left_column[j] = domain[1][j + 1]; 
       send_right_column[j] = domain[m][j + 1];
@@ -642,12 +642,12 @@ void sendrecv(double **domain,
 	}
     
     // printf("I'm okay %d\n", info->rank);
-    #pragma omp parallel for default(shared) private(i) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(i) schedule(dynamic)
     for (i = 0; i < m; ++i) {
         domain[i + 1][0] = recv_down_row[i];
         domain[i + 1][n + 1] = recv_up_row[i];
     }
-    #pragma omp parallel for default(shared) private(j) schedule(dynamic)
+    // #pragma omp parallel for default(shared) private(j) schedule(dynamic)
     for (j = 0; j < n; ++j) {
         domain[0][j + 1] = recv_left_column[j];
         domain[m + 1][j + 1] = recv_right_column[j];

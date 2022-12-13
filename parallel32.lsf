@@ -2,4 +2,4 @@
 #BSUB -W 00:30
 #BSUB -o "p32_500x500.out"
 #BSUB -e "err.err"
-mpiexec ./parallelO.o 500 500 316.84 0.000001
+mpiexec ./parallel.o 500 500 316.84 0.000001

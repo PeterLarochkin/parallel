@@ -1,5 +1,6 @@
-#BSUB -n 2
-#BSUB -W 00:30
-#BSUB -o "po1_500x500.out"
+#BSUB -n 2 -q normal
+#BSUB -W 00:40
+#BSUB -o "po2_500x500.out"
 #BSUB -e "err.err"
+#BSUB -R "affinity[core(1)]"
 OMP_NUM_THREADS=4 mpiexec ./parallelO.o 500 500 316.84 0.000001

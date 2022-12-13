@@ -1,4 +1,4 @@
-#BSUB -n 16
+#BSUB -n 16 -q normal
 #BSUB -W 00:30
 #BSUB -o "p16_500x1000.out"
 #BSUB -e "err.err"

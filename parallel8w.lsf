@@ -1,4 +1,4 @@
-#BSUB -n 8
+#BSUB -n 8 -q normal
 #BSUB -W 00:30
 #BSUB -o "p8_500x1000.out"
 #BSUB -e "err.err"

@@ -680,7 +680,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
         }
     }
     
-    getAnalyticalSolution(solution, h1, h2, info);
+    
     getB(B, M, N, h1, h2, A1, A2, B1, B2, info);
     double *send_up_row =       (double*) malloc(m * sizeof(double));
     double *recv_up_row =       (double*) malloc(m * sizeof(double));
@@ -728,7 +728,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     double local_time_diff = MPI_Wtime() - start_time;
     
     double global_time_diff = 0.0;
-
+    getAnalyticalSolution(solution, h1, h2, info);
     minus(solution, omega_next, solution, M, N, info);
     double norm = getMaxNorm(solution, M, N, h1, h2, info, Comm);
     MPI_Allreduce(&local_time_diff, &global_time_diff, 1, MPI_DOUBLE, MPI_MAX, *Comm);

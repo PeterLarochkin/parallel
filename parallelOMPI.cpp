@@ -571,7 +571,7 @@ void multiplyByNum(double** items, double num, double** whatWriteTo, double M, d
     int m = info->m;
     int n = info->n;
     int i, j;
-    #pragma omp parallel for default(shared) private(i) schedule(dynamic)
+    #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
     for (i = 1; i <= m; ++i) {
             for (j = 1; j <= n; ++j) {
             whatWriteTo[i][j] = items[i][j]*num;
@@ -728,7 +728,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int count = 0;
     while (difference_global >= epsilon)
     {
-        
+        #pragma omp parallel for default(shared) private(i, j)
         for (size_t i = 1; i <= m; ++i) {
             for (size_t j = 1; j <= n; ++j) {
                 omega[i][j] = omega_next[i][j];

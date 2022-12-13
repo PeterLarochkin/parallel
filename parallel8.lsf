@@ -1,0 +1,5 @@
+#BSUB -n 8
+#BSUB -W 00:30
+#BSUB -o "p8_500x500.out"
+#BSUB -e "err.err"
+mpiexec ./parallelO.o 500 500 316.84 0.000001

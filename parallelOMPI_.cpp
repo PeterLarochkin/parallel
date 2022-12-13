@@ -180,7 +180,9 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     //with padding, inside, inside "picture"
     int i, j;
     // #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
+    #pragma omp parallel
     for ( i= 2; i <= m-1; ++i) {
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) {
             // here is (7) equation works
             whatWriteTo[i][j] = whatApplyTo[i][j] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + i - 1)*h1, (b1 + j - 1)*h2)) + 
@@ -197,7 +199,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         // if ((b1 + n - 1) == N) {
         //     printf("Yes\n");
         // }
-        
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             // whatWriteTo[i][n] = psi((a1 + i - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2) * 2/h2 + F((a1 + i - 1)*h1, (b1 + n - 1)*h2);
             whatWriteTo[i][n] = 2/(h2*h2) * (whatApplyTo[i][n] - whatApplyTo[i][n-1]) +
@@ -206,7 +208,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         }
     } else {
         // I'm not near the top border
-        
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][n] = whatApplyTo[i][n] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + i - 1)*h1, (b1 + n - 1)*h2)) + 
                                 whatApplyTo[i-1][n] * (-1/(h1*h1)) +
@@ -221,7 +223,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
     // let's look on the bottom border
     if (down <0) {
     // if I'm near the bottom border
-        
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = -2/(h2*h2) * (whatApplyTo[i][2] - whatApplyTo[i][1]) +
                             ( q((a1 + i - 1)*h1, (b1 + 1 - 1)*h2) + 2/h2 ) * whatApplyTo[i][1] -
@@ -229,7 +231,7 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         }
     } else {
     // if I'm not near the bottom border
-        
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = whatApplyTo[i][1] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + i - 1)*h1, (b1 + 1 - 1)*h2)) + 
                                 whatApplyTo[i-1][1] * (-1/(h1*h1)) +
@@ -245,14 +247,14 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         // if ((a1 + m - 1) == M) {
         //     printf("Yes\n");
         // }
-        
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[m][j] = 2/(h1*h1) * (whatApplyTo[m][j] - whatApplyTo[m-1][j]) + 
                             (q((a1 + m - 1)*h1, (b1 + j - 1)*h2) + 2/h1) * whatApplyTo[m][j] - 
                             1/(h2*h2)*(whatApplyTo[m][j+1] - whatApplyTo[m][j] - whatApplyTo[m][j]+ whatApplyTo[m][j-1]);
         }
     } else {
-        
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[m][j] = whatApplyTo[m][j] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + m - 1)*h1, (b1 + j - 1)*h2)) + 
                                 whatApplyTo[m-1][j] * (-1/(h1*h1)) +
@@ -267,14 +269,14 @@ void applyA(double** whatApplyTo, double** whatWriteTo, int M, int N, double h1,
         // if ((a1 + 1 - 1) == 0) {
         //     printf("Yes\n");
         // }
-        
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[1][j] = -2/(h1*h1) * (whatApplyTo[2][j] - whatApplyTo[1][j]) + 
                             (q((a1 + 1 - 1)*h1, (b1 + j - 1)*h2) + 2/h1) * whatApplyTo[1][j] - 
                             1/(h2*h2)*(whatApplyTo[1][j+1] - whatApplyTo[1][j] - whatApplyTo[1][j]+ whatApplyTo[1][j-1]);
         }
     } else {
-        
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[1][j] = whatApplyTo[1][j] * (2/(h1*h1) + 2/(h2*h2) + q((a1 + 1 - 1)*h1, (b1 + j - 1)*h2)) + 
                                 whatApplyTo[1-1][j] * (-1/(h1*h1)) + // <- here is using border from another cell
@@ -392,8 +394,9 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     int down = info->down_rank;
     int i, j;
     //with padding, inside, inside "picture"
-    #pragma omp parallel for default(shared) private(i, j)
+    #pragma omp parallel
     for (i = 2; i <= m-1; ++i) {
+        #pragma omp parallel
         for (int j = 2; j <= n-1; ++j) {
             whatWriteTo[i][j] = F((a1 + i - 1)*h1, (b1 + j - 1)*h2);
         }
@@ -401,13 +404,13 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     // let's look on the top border
     if (up <0) {
         // if I'm near top, I need to use top boarding equation (10)
-        #pragma omp parallel for default(shared) private(i)
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][n] = psi((a1 + i - 1)*h1, (b1 + n - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + i - 1)*h1, (b1 + n - 1)*h2);
         }
     } else {
         // I'm not near the top border
-        #pragma omp parallel for default(shared) private(i)
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][n] = F((a1 + i - 1)*h1, (b1 + n - 1)*h2);
         }
@@ -416,13 +419,13 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
     // let's look on the bottom border
     if (down <0) {
     // if I'm near the bottom border
-        #pragma omp parallel for default(shared) private(i)
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = psi((a1 + i - 1)*h1, (b1 + 1 - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h2 + F((a1 + i - 1)*h1, (b1 + 1 - 1)*h2);
         }
     } else {
     // if I'm not near the bottom border
-        #pragma omp parallel for default(shared) private(i)
+        #pragma omp parallel
         for (i = 2; i <= m-1; ++i) { 
             whatWriteTo[i][1] = F((a1 + i - 1)*h1, (b1 + 1 - 1)*h2);
         }
@@ -430,12 +433,12 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
 
     // let's look on the right board
     if (right <0) {
-        #pragma omp parallel for default(shared) private(j)
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[m][j] = psi((a1 + m - 1)*h1, (b1 + j - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + m - 1)*h1, (b1 + j - 1)*h2);
         }
     } else {
-        #pragma omp parallel for default(shared) private(j)
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[m][j] = F((a1 + m - 1)*h1, (b1 + j - 1)*h2);
         }
@@ -443,12 +446,12 @@ void getB(double** whatWriteTo, int M, int N, double h1, double h2, double A1, d
 
     //let's look on the left border
     if (left <0) {
-        #pragma omp parallel for default(shared) private(j)
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[1][j] = psi((a1 + 1 - 1)*h1, (b1 + j - 1)*h2, A1, A2, B1, B2, h1, h2) * 2/h1 + F((a1 + 1 - 1)*h1, (b1 + j - 1)*h2);
         }
     } else {
-        #pragma omp parallel for default(shared) private(j)
+        #pragma omp parallel
         for (j = 2; j <= n-1; ++j) { 
             whatWriteTo[1][j] = F((a1 + 1 - 1)*h1, (b1 + j - 1)*h2);
         }
@@ -512,8 +515,9 @@ void minus(double** first, double** second, double** whatWriteTo, double M, doub
     int m = info->m;
     int n = info->n;
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j)
+    #pragma omp parallel
     for (i = 1; i <= m; ++i) {
+            #pragma omp parallel
             for (j = 1; j <= n; ++j) {
             whatWriteTo[i][j] = first[i][j] - second[i][j];
         }
@@ -571,8 +575,9 @@ void multiplyByNum(double** items, double num, double** whatWriteTo, double M, d
     int m = info->m;
     int n = info->n;
     int i, j;
-    #pragma omp parallel for default(shared) private(i, j)
+    #pragma omp parallel
     for (i = 1; i <= m; ++i) {
+            #pragma omp parallel
             for (j = 1; j <= n; ++j) {
             whatWriteTo[i][j] = items[i][j]*num;
         }
@@ -595,13 +600,13 @@ void sendrecv(double **domain,
     int rank = info->rank;
     int i, j;
     // #pragma omp parallel for default(shared) private(i) schedule(dynamic)
-    #pragma omp parallel for private(i)
+    #pragma omp parallel
     for (i = 0; i < info->m; ++i) {
       send_down_row[i] = domain[i + 1][1];
       send_up_row[i] = domain[i + 1][n]; 
     }
     // #pragma omp parallel for default(shared) private(j) schedule(dynamic)
-    #pragma omp parallel for private(j)
+    #pragma omp parallel
     for (j = 0; j < n; ++j) {  
       send_left_column[j] = domain[1][j + 1]; 
       send_right_column[j] = domain[m][j + 1];
@@ -644,12 +649,12 @@ void sendrecv(double **domain,
 	}
     
     // printf("I'm okay %d\n", info->rank);
-    #pragma omp parallel for private(i)
+    #pragma omp parallel
     for (i = 0; i < m; ++i) {
         domain[i + 1][0] = recv_down_row[i];
         domain[i + 1][n + 1] = recv_up_row[i];
     }
-    #pragma omp parallel for private(j)
+    #pragma omp parallel
     for (j = 0; j < n; ++j) {
         domain[0][j + 1] = recv_left_column[j];
         domain[m + 1][j + 1] = recv_right_column[j];
@@ -729,8 +734,9 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int count = 0;
     while (difference_global >= epsilon)
     {
-        #pragma omp parallel for default(shared) private(i, j)
+        #pragma omp parallel
         for (size_t i = 1; i <= m; ++i) {
+            #pragma omp parallel
             for (size_t j = 1; j <= n; ++j) {
                 omega[i][j] = omega_next[i][j];
             }

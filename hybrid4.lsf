@@ -4,4 +4,4 @@
 #BSUB -e "err.err"
 #BSUB -R "affinity[core(1)]"
 OMP_NUM_THREADS=4
-mpiexec -n 4 ./mpiexec 500 500 316.84 0.000001
+mpiexec -n 4 ./mpiexec ./parallelO.o 500 500 316.84 0.000001

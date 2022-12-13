@@ -685,7 +685,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     double** tau_r              = (double**)malloc((m + 2) * sizeof(double*)); 
     double** difference_omega   = (double**)malloc((m + 2) * sizeof(double*));
     double** solution           = (double**)malloc((m + 2) * sizeof(double*)); 
-
+    int i, j;
     #pragma omp parallel for default(shared) private(i) schedule(dynamic)
     for (size_t i = 0; i <= m + 1; ++i) {
         omega[i]            = (double*)malloc((n + 2) * sizeof(double));
@@ -731,7 +731,7 @@ void solving (double h1, double h2, double epsilon, double A1, double A2, double
     int count = 0;
     while (difference_global >= epsilon)
     {
-        int i, j;
+        
         #pragma omp parallel for default(shared) private(i, j) schedule(dynamic)
         for (i = 1; i <= m; ++i) {
             for (j = 1; j <= n; ++j) {
